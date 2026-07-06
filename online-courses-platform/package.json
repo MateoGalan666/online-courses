@@ -1,0 +1,33 @@
+{
+  "name": "online-courses-platform",
+  "version": "1.0.0",
+  "description": "Professional Online Course Platform using TypeScript, Express, and SQLite",
+  "main": "backend/dist/server.js",
+  "scripts": {
+    "build:backend": "tsc -p backend/tsconfig.json",
+    "build:frontend": "tsc -p frontend/tsconfig.json",
+    "build": "npm run build:backend && npm run build:frontend",
+    "watch:backend": "tsc -p backend/tsconfig.json -w",
+    "watch:frontend": "tsc -p frontend/tsconfig.json -w",
+    "start": "node backend/dist/server.js",
+    "server": "nodemon backend/dist/server.js",
+    "dev": "concurrently \"npm run watch:backend\" \"npm run watch:frontend\" \"nodemon --watch backend/dist backend/dist/server.js\"",
+    "dev:estudiante": "concurrently \"npm run watch:backend\" \"npm run watch:frontend\" \"nodemon --watch backend/dist backend/dist/server-estudiante.js\"",
+    "dev:profesor": "concurrently \"npm run watch:backend\" \"npm run watch:frontend\" \"nodemon --watch backend/dist backend/dist/server-profesor.js\"",
+    "dev:admin": "concurrently \"npm run watch:backend\" \"npm run watch:frontend\" \"nodemon --watch backend/dist backend/dist/server-admin.js\"",
+    "dev:all": "concurrently \"npm run watch:backend\" \"npm run watch:frontend\" \"nodemon --watch backend/dist backend/dist/server.js\" \"nodemon --watch backend/dist backend/dist/server-estudiante.js\" \"nodemon --watch backend/dist backend/dist/server-profesor.js\" \"nodemon --watch backend/dist backend/dist/server-admin.js\""
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.3",
+    "nodemon": "^3.1.0",
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceder | CCSUD</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="/" class="logo">
+        <img src="/images/logo_ccsud.svg" alt="CCSUD Logo" style="height: 48px; width: auto;">
+      </a>
+      <nav class="nav">
+        <a href="/" class="nav__link">Inicio</a>
+        <a href="/#cursos" class="nav__link">Cursos</a>
+        <a href="/login" class="nav__link nav__link--active" id="headerLoginLink">Acceder</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CUERPO PRINCIPAL -->
+  <main class="container login-container">
+    <div class="login-card">
+      <div class="login-tabs">
+        <div class="login-tab login-tab--active" id="tabLogin">Iniciar Sesión</div>
+        <div class="login-tab" id="tabRegister">Registrarse</div>
+      </div>
+      
+      <div class="login-body">
+        <!-- INICIO DE SESIÓN -->
+        <div class="login-form login-form--active" id="formLoginContainer">
+          <h1 class="login-title">¡Te damos la bienvenida!</h1>
+          <p class="login-subtitle">Ingresa tus credenciales para acceder a tus cursos.</p>
+          
+          <form id="loginForm">
+            <div class="form-group">
+              <label class="form-label" for="loginEmail">Correo Electrónico</label>
+              <input class="form-input" type="email" id="loginEmail" placeholder="correo@ejemplo.com" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="loginPassword">Contraseña</label>
+              <input class="form-input" type="password" id="loginPassword" placeholder="••••••••" required>
+            </div>
+
+            <div id="loginError" style="display: none; background-color: #fee2e2; color: #b91c1c; padding: 0.65rem; border-radius: var(--radius-md); border: 1px solid #fca5a5; font-size: 0.85rem; margin-bottom: 1.25rem; text-align: center;"></div>
+
+            <button type="submit" class="btn btn--primary" style="width: 100%;">
+              Entrar a la Academia
+            </button>
+          </form>
+        </div>
+
+        <!-- REGISTRO -->
+        <div class="login-form" id="formRegisterContainer">
+          <h1 class="login-title">Crea tu cuenta</h1>
+          <p class="login-subtitle">Regístrate como estudiante para comenzar a aprender hoy.</p>
+          
+          <form id="registerForm">
+            <div class="form-group">
+              <label class="form-label" for="registerName">Nombre Completo</label>
+              <input class="form-input" type="text" id="registerName" placeholder="Ej. Juan Pérez" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="registerEmail">Correo Electrónico</label>
+              <input class="form-input" type="email" id="registerEmail" placeholder="correo@ejemplo.com" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="registerPassword">Contraseña</label>
+              <input class="form-input" type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" minlength="6" required>
+            </div>
+
+            <div id="registerError" style="display: none; background-color: #fee2e2; color: #b91c1c; padding: 0.65rem; border-radius: var(--radius-md); border: 1px solid #fca5a5; font-size: 0.85rem; margin-bottom: 1.25rem; text-align: center;"></div>
+
+            <button type="submit" class="btn btn--primary" style="width: 100%;">
+              Registrar Cuenta
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom" style="border-top: none; padding-top: 0;">
+        <p>&copy; 2026 CCSUD. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/dist/login.js"></script>
+</body>
+</html>

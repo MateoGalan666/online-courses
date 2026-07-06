@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout de Inscripción | CCSUD</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="/" class="logo">
+        <img src="/images/logo_ccsud.svg" alt="CCSUD Logo" style="height: 48px; width: auto;">
+      </a>
+      <nav class="nav">
+        <a href="/" class="nav__link">Inicio</a>
+        <a href="/#cursos" class="nav__link">Cursos</a>
+        <a href="/admin" class="nav__link">Administración</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CONTENIDO DEL CHECKOUT -->
+  <section class="checkout-section">
+    <div class="container">
+      <div class="checkout-grid">
+        
+        <!-- Formulario Izquierda -->
+        <main class="checkout-card">
+          <h1 class="checkout-card__title">
+            <svg class="checkout-card__title-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            Detalles del Pago
+          </h1>
+
+          <div class="payment-simulation-alert">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
+            <span><strong>Integración Stripe Simulada:</strong> No se realizarán cargos reales. Usa datos decorativos para probar el flujo.</span>
+          </div>
+
+          <!-- TARJETA DE CRÉDITO DECORATIVA -->
+          <div class="card-preview">
+            <div class="card-preview__brand">
+              <span>Secure Card</span>
+              <div class="card-preview__chip"></div>
+            </div>
+            <div class="card-preview__number" id="previewNumber">•••• •••• •••• ••••</div>
+            <div class="card-preview__footer">
+              <div>
+                <span class="card-preview__label">Titular</span>
+                <span class="card-preview__value" id="previewName">Nombre Apellido</span>
+              </div>
+              <div>
+                <span class="card-preview__label">Expira</span>
+                <span class="card-preview__value" id="previewExpiry">MM/AA</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- FORMULARIO -->
+          <form id="checkoutForm">
+            <h3 style="font-family: var(--font-heading); font-size: 1rem; margin-bottom: 1rem; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+              Información de Contacto
+            </h3>
+            
+            <div class="form-group">
+              <label class="form-label" for="nombreCliente">Nombre Completo</label>
+              <input class="form-input" type="text" id="nombreCliente" placeholder="Ej. Juan Pérez" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="emailCliente">Correo Electrónico</label>
+              <input class="form-input" type="email" id="emailCliente" placeholder="Ej. juan.perez@correo.com" required>
+            </div>
+
+            <h3 style="font-family: var(--font-heading); font-size: 1rem; margin: 1.5rem 0 1rem 0; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+              Información de Facturación
+            </h3>
+
+            <div class="form-group">
+              <label class="form-label" for="numeroTarjeta">Número de Tarjeta</label>
+              <input class="form-input" type="text" id="numeroTarjeta" placeholder="4111 2222 3333 4444" maxlength="19" required>
+            </div>
+
+            <div class="card-inputs-grid">
+              <div class="form-group">
+                <label class="form-label" for="expiracionTarjeta">Fecha de Expiración</label>
+                <input class="form-input" type="text" id="expiracionTarjeta" placeholder="MM/AA" maxlength="5" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cvvTarjeta">CVC / CVV</label>
+                <input class="form-input" type="password" id="cvvTarjeta" placeholder="123" maxlength="4" required>
+              </div>
+            </div>
+
+            <div id="checkoutError" style="display: none; background-color: #fee2e2; color: #b91c1c; padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid #fca5a5; font-size: 0.85rem; margin-bottom: 1.25rem;">
+            </div>
+
+            <button type="submit" class="btn btn--primary" id="btnSubmitCheckout" style="width: 100%; font-size: 1rem; padding: 0.9rem;">
+              <span id="btnSubmitText">Proceder con el Pago Simulado</span>
+              <div class="loading-spinner loading-spinner--btn" id="btnSubmitSpinner" style="display: none;"></div>
+            </button>
+          </form>
+        </main>
+
+        <!-- Sidebar Resumen -->
+        <aside class="order-summary" id="orderSummaryWrapper">
+          <div class="spinner-container" id="summarySpinner">
+            <div class="loading-spinner"></div>
+          </div>
+          
+          <div id="summaryContent" style="display: none;">
+            <h2 class="order-summary__title">Resumen de tu Inscripción</h2>
+            <div class="order-summary__course">
+              <img class="order-summary__img" id="summaryCourseImg" src="" alt="Curso">
+              <div>
+                <h4 class="order-summary__course-title" id="summaryCourseTitle">...</h4>
+                <p class="order-summary__course-instructor">Instructor: <span id="summaryCourseInstructor">...</span></p>
+              </div>
+            </div>
+            
+            <div class="order-summary__row">
+              <span>Subtotal del curso</span>
+              <span id="summaryCoursePriceSub">$0.00</span>
+            </div>
+            <div class="order-summary__row">
+              <span>Impuestos y tasas</span>
+              <span>$0.00</span>
+            </div>
+            <div class="order-summary__row order-summary__row--total">
+              <span>Total de la Compra</span>
+              <span id="summaryCoursePriceTotal">$0.00</span>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <a href="/" class="logo" style="color: white;">
+            CCSUD<span class="logo__dot"></span>
+          </a>
+          <p class="footer__about-text">
+            Plataforma educativa de alta tecnología dedicada a capacitar a la próxima generación de ingenieros y desarrolladores de software en todo el mundo.
+          </p>
+        </div>
+        <div>
+          <h3 class="footer__title">Enlaces Rápidos</h3>
+          <ul class="footer__links">
+            <li class="footer__link-item"><a href="/">Inicio</a></li>
+            <li class="footer__link-item"><a href="/#cursos">Cursos</a></li>
+            <li class="footer__link-item"><a href="/admin">Panel de Administración</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer__title">Contacto</h3>
+          <ul class="footer__links">
+            <li class="footer__link-item"><a href="mailto:soporte@ccsud.academy">soporte@ccsud.academy</a></li>
+            <li class="footer__link-item"><a href="#">+1 (555) 019-2834</a></li>
+            <li class="footer__link-item"><span style="color: #94a3b8; font-size: 0.85rem;">Remoto / Global</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>&copy; 2026 CCSUD. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/dist/checkout.js"></script>
+</body>
+</html>

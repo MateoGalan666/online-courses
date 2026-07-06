@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin/Profesor | CCSUD</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .role-only-admin { display: none; }
+    .btn--logout {
+      background: var(--primary);
+      color: white;
+      border: none;
+    }
+    .btn--logout:hover {
+      box-shadow: 0 4px 14px rgba(13, 27, 42, 0.2);
+      transform: translateY(-1px);
+    }
+    .user-form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+      gap: 0.75rem;
+      align-items: end;
+      margin-bottom: 1.5rem;
+      background: var(--primary-lighter);
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+    .user-form-grid .form-group { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="/" class="logo">
+        <img src="/images/logo_ccsud.svg" alt="CCSUD Logo" style="height: 48px; width: auto;">
+      </a>
+      <nav class="nav">
+        <a href="/" class="nav__link">Inicio</a>
+        <a href="/#cursos" class="nav__link">Cursos</a>
+        <a href="/admin" class="nav__link nav__link--active" id="navPanelLink">Panel Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PANEL PRINCIPAL -->
+  <main class="container">
+    <div id="adminDashboardSection" class="admin-section" style="margin-top: 1.5rem;">
+      <!-- HEADER -->
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-header__title" id="dashboardTitle">Panel de Administración</h1>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;" id="dashboardSubtitle">Administra el catálogo de cursos y publica lecciones para tus estudiantes.</p>
+        </div>
+        <button id="btnAdminLogout" class="btn btn--logout">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          Cerrar Sesión
+        </button>
+      </div>
+
+      <!-- Métricas -->
+      <div class="admin-stats-grid">
+        <div class="stat-card">
+          <div class="stat-card__icon" style="background: linear-gradient(135deg, #e8f6f6 0%, #d0edf0 100%); color: var(--primary);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div>
+            <div class="stat-card__label">Cursos Ofertados</div>
+            <div class="stat-card__value" id="statCoursesCount">--</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon" style="background: linear-gradient(135deg, #d1fae5 0%, #bbf7d0 100%); color: var(--success);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <div class="stat-card__label">Estudiantes Inscritos</div>
+            <div class="stat-card__value" id="statStudentsCount">--</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); color: #0284c7;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="1" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div>
+            <div class="stat-card__label">Ventas Totales (Simuladas)</div>
+            <div class="stat-card__value" id="statEarnings">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="admin-tabs">
+        <div class="admin-tab admin-tab--active" id="tabCourses">📚 Cursos Ofertados</div>
+        <div class="admin-tab role-only-admin" id="tabUsers">👥 Usuarios</div>
+        <div class="admin-tab role-only-admin" id="tabOrders">💰 Ventas y Pedidos</div>
+      </div>
+
+      <!-- Cursos -->
+      <div id="adminCoursesSection" class="admin-panel-content">
+        <div class="admin-panel-content__title">
+          <span>Catálogo Académico</span>
+          <button id="btnCreateCourse" class="btn btn--primary btn--sm role-only-admin">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+            Crear Curso
+          </button>
+        </div>
+
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Imagen</th>
+                <th>Título</th>
+                <th>Instructor</th>
+                <th>Precio</th>
+                <th style="text-align: center;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="adminCoursesTableBody">
+              <!-- Carga por JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Usuarios -->
+      <div id="adminUsersSection" class="admin-panel-content role-only-admin" style="display: none;">
+        <div class="admin-panel-content__title">
+          <span>Credenciales de Usuarios</span>
+        </div>
+        <form id="userForm" class="user-form-grid">
+          <input type="hidden" id="userIdField">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="userNameField">Nombre</label>
+            <input class="form-input" type="text" id="userNameField" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="userEmailField">Email</label>
+            <input class="form-input" type="email" id="userEmailField" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="userPasswordField">Contraseña</label>
+            <input class="form-input" type="password" id="userPasswordField" placeholder="Nueva o actual">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="userRoleField">Rol</label>
+            <select class="form-input" id="userRoleField" required>
+              <option value="estudiante">Estudiante</option>
+              <option value="profesor">Profesor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn--primary" id="btnSaveUser" style="height: 42px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+            Crear
+          </button>
+          <div id="userError" style="display: none; grid-column: 1 / -1; background-color: #fee2e2; color: #b91c1c; padding: 0.65rem; border-radius: var(--radius-md); border: 1px solid #fca5a5; font-size: 0.85rem;"></div>
+        </form>
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th style="text-align: center;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="adminUsersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pedidos -->
+      <div id="adminOrdersSection" class="admin-panel-content" style="display: none;">
+        <div class="admin-panel-content__title">
+          <span>Historial de Cobros (Stripe)</span>
+        </div>
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID Pedido</th>
+                <th>Estudiante</th>
+                <th>Email</th>
+                <th>Curso</th>
+                <th>Monto</th>
+                <th>Fecha Compra</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="adminOrdersTableBody">
+              <!-- Carga por JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL: CREAR / EDITAR CURSO -->
+  <div id="courseModal" class="modal">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h3 class="modal__title" id="modalTitle">Nuevo Curso</h3>
+        <button class="modal__close" id="btnModalClose">&times;</button>
+      </div>
+      <div class="modal__body">
+        <form id="courseForm">
+          <input type="hidden" id="courseIdField">
+
+          <div class="form-group">
+            <label class="form-label" for="courseTitleField">Título del Curso</label>
+            <input class="form-input" type="text" id="courseTitleField" placeholder="Ej. Máster en Node.js Profesional" required>
+          </div>
+
+          <div class="card-inputs-grid">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="courseInstructorField">Nombre del Instructor</label>
+              <input class="form-input" type="text" id="courseInstructorField" placeholder="Ej. Dr. Alejandro Ruiz">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="courseInstructorAvatarField">URL de Foto del Instructor</label>
+              <input class="form-input" type="url" id="courseInstructorAvatarField" placeholder="https://unsplash.com/...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="courseInstructorBioField">
+              Biografía del Instructor
+              <span style="font-weight: 400; font-size: 0.78rem; color: var(--text-muted);">(Opcional)</span>
+            </label>
+            <textarea class="form-input" id="courseInstructorBioField" rows="2" placeholder="Ej. Ingeniero de Software con 10 años de experiencia..."></textarea>
+          </div>
+
+          <div class="card-inputs-grid">
+            <div class="form-group">
+              <label class="form-label" for="coursePriceField">Precio Oferta ($ USD)</label>
+              <input class="form-input" type="number" id="coursePriceField" placeholder="0.50" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="coursePriceOriginalField">Precio Original ($ USD)</label>
+              <input class="form-input" type="number" id="coursePriceOriginalField" placeholder="29.99" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="courseImageField">URL Portada <span id="imageRequiredBadge" style="color: var(--danger); font-size: 0.78rem;">(req. sin HTML)</span></label>
+              <input class="form-input" type="url" id="courseImageField" placeholder="https://unsplash.com/...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="courseDescField">Descripción General</label>
+            <textarea class="form-input" id="courseDescField" placeholder="Ingresa la descripción... (Opcional si usas HTML)"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="courseSyllabusField">Temario (Un elemento por línea)</label>
+            <textarea class="form-input" id="courseSyllabusField" placeholder="Módulo 1: Introducción..." rows="3"></textarea>
+          </div>
+
+          <div class="form-group" style="border: 2px dashed var(--accent); border-radius: var(--radius-lg); padding: 1.25rem; background: var(--accent-light);">
+            <label class="form-label" for="courseHtmlField" style="color: var(--accent-hover); font-weight: 700;">
+              🧩 Código HTML Personalizado
+              <span style="font-weight: 400; font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 0.25rem;">Si pegas HTML aquí, reemplaza descripción y temario.</span>
+            </label>
+            <textarea class="form-input" id="courseHtmlField" placeholder="Pega aquí tu HTML completo..." rows="5" oninput="toggleHtmlMode(this)"></textarea>
+          </div>
+
+          <div id="modalError" style="display: none; background-color: #fee2e2; color: #b91c1c; padding: 0.65rem; border-radius: var(--radius-md); border: 1px solid #fca5a5; font-size: 0.85rem; margin-top: 1rem;"></div>
+        </form>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--outline" id="btnModalCancel">Cancelar</button>
+        <button type="submit" form="courseForm" class="btn btn--primary" id="btnModalSave">Guardar Curso</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: GESTIONAR LECCIONES -->
+  <div id="lessonsModal" class="modal">
+    <div class="modal__content" style="max-width: 560px;">
+      <div class="modal__header">
+        <h3 class="modal__title" id="lessonsModalTitle">Gestionar Lecciones</h3>
+        <button class="modal__close" onclick="cerrarModalLecciones()">&times;</button>
+      </div>
+      <div class="modal__body">
+        <h4 style="margin-bottom: 0.75rem; font-family: var(--font-heading); color: var(--primary); font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+          📖 Clases Actuales
+        </h4>
+        <ul class="lms-modal-list" id="lessonsModalList">
+          <!-- Carga dinámica -->
+        </ul>
+
+        <h4 id="lessonFormTitle" style="margin-bottom: 1rem; font-family: var(--font-heading); color: var(--primary); font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+          ✏️ Agregar Nueva Lección
+        </h4>
+        <form id="lessonForm">
+          <input type="hidden" id="lessonCourseId">
+          <input type="hidden" id="lessonId">
+          <div class="form-group">
+            <label class="form-label" for="lessonTitle">Título de la Lección</label>
+            <input class="form-input" type="text" id="lessonTitle" placeholder="Ej. Introducción al entorno de desarrollo" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lessonDesc">Descripción / Objetivos</label>
+            <input class="form-input" type="text" id="lessonDesc" placeholder="Detalles de la clase...">
+          </div>
+          <div class="card-inputs-grid">
+            <div class="form-group">
+              <label class="form-label" for="lessonDay">Día del Curso</label>
+              <input class="form-input" type="number" id="lessonDay" value="1" min="1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lessonVideoUrl">Enlace del Video</label>
+              <input class="form-input" type="url" id="lessonVideoUrl" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lessonOrder">Orden</label>
+              <input class="form-input" type="number" id="lessonOrder" value="0" min="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lessonFile">Archivo de apoyo</label>
+            <input class="form-input" type="file" id="lessonFile" accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt">
+            <small id="lessonFileCurrent" style="display: block; color: var(--text-light); margin-top: 0.35rem;"></small>
+          </div>
+          <div id="lessonError" style="display: none; background-color: #fee2e2; color: #b91c1c; padding: 0.65rem; border-radius: var(--radius-md); border: 1px solid #fca5a5; font-size: 0.85rem; margin-bottom: 1rem;"></div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn--outline" id="btnCancelLessonEdit" style="display: none; flex: 1;">Cancelar Edición</button>
+            <button type="submit" class="btn btn--primary" id="btnSaveLesson" style="flex: 1;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+              Agregar Lección
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom" style="border-top: none; padding-top: 0;">
+        <p>&copy; 2026 CCSUD. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleHtmlMode(textarea) {
+      const hasHtml = textarea.value.trim() !== '';
+      const imageField = document.getElementById('courseImageField');
+      const badge = document.getElementById('imageRequiredBadge');
+      if (hasHtml) {
+        imageField.removeAttribute('required');
+        if (badge) badge.textContent = '(opcional con HTML)';
+        if (badge) badge.style.color = 'var(--success)';
+      } else {
+        if (badge) badge.textContent = '(requerido sin HTML)';
+        if (badge) badge.style.color = 'var(--danger)';
+      }
+    }
+  </script>
+  <script type="module" src="/dist/admin.js"></script>
+</body>
+</html>

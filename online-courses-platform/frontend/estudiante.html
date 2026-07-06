@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula Virtual | CCSUD</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .role-teacher-only { display: none; }
+    .lms-welcome h1 {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+    .modal-wide .modal__content { max-width: 820px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="/" class="logo">
+        <img src="/images/logo_ccsud.svg" alt="CCSUD" style="height: 48px; width: auto;">
+      </a>
+      <nav class="nav" id="mainNav"></nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container lms-grid">
+
+    <!-- SIDEBAR -->
+    <aside class="lms-sidebar">
+      <h2 class="lms-sidebar__title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Mis Cursos
+      </h2>
+      <ul class="student-course-list" id="studentCourseList">
+        <div class="loading-spinner" style="margin: 2rem auto;"></div>
+      </ul>
+    </aside>
+
+    <!-- AULA VIRTUAL -->
+    <section class="lms-main" id="lmsWorkspace">
+
+      <!-- BIENVENIDA -->
+      <div class="lms-welcome" id="lmsWelcomeScreen">
+        <span class="lms-welcome__icon">🎓</span>
+        <h1 style="font-size: 1.5rem; margin-bottom: 0.5rem; font-family: var(--font-heading); font-weight: 800;">¡Bienvenido al Aula Virtual!</h1>
+        <p>Selecciona un curso de la barra lateral para comenzar tu aprendizaje.</p>
+      </div>
+
+      <!-- CONTENIDO ACTIVO -->
+      <div id="activeCourseContent" style="display:none;">
+
+        <!-- TÍTULO DEL CURSO -->
+        <div style="padding: 1.5rem 2rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <h1 id="activeCourseTitle" style="font-size: 1.35rem; font-weight: 800; color: var(--primary); font-family: var(--font-heading); letter-spacing: -0.01em;"></h1>
+        </div>
+
+        <!-- BROWSER TABS -->
+        <div class="browser-tabs-bar" id="browserTabsBar" style="display:none; margin-top: 0.75rem;">
+          <div class="browser-tabs-container" id="browserTabsContainer"></div>
+          <button class="btn btn--primary btn--sm role-teacher-only" id="btnAddLessonTab" style="display:none;">+ Clase</button>
+        </div>
+
+        <!-- REPRODUCTOR LECCIÓN -->
+        <div id="lessonViewArea" style="display:none;">
+          <div class="lesson-body">
+            <div id="lessonMediaContainer"></div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.3rem;">
+              <span style="font-size: 1.1rem;">📖</span>
+              <h2 id="activeLessonTitle" style="font-size: 1.1rem; font-weight: 800; color: var(--primary); font-family: var(--font-heading);"></h2>
+            </div>
+            <p id="activeLessonDesc" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem; padding-left: 1.85rem;"></p>
+
+            <!-- QUIZ ESTUDIANTE -->
+            <div id="lessonQuestionsContainer" class="quiz-section" style="display:none;">
+              <h3 style="font-size: 0.95rem; color: var(--primary); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-heading);">
+                <span style="font-size: 1.1rem;">📝</span> Evalúa tus conocimientos
+              </h3>
+              <div id="questionsListStudent"></div>
+            </div>
+
+            <!-- QUIZ PROFESOR -->
+            <div id="teacherQuizSection" class="quiz-section role-teacher-only" style="display:none;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                <h3 style="font-size: 0.95rem; color: var(--primary); font-family: var(--font-heading); display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="font-size: 1.1rem;">🧠</span> Preguntas del Quiz
+                </h3>
+                <button class="btn btn--primary btn--sm" id="btnAddQuestion">+ Agregar Pregunta</button>
+              </div>
+              <div id="teacherQuestionsList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABS DEL AULA -->
+        <div class="course-tabs" id="courseTabsBar">
+          <div class="course-tab course-tab--active" id="tabLessons">📚 Temario General</div>
+          <div class="course-tab" id="tabAssignments">📋 Deberes</div>
+        </div>
+
+        <!-- PANEL TEMARIO -->
+        <div class="tab-content tab-content--active" id="panelLessons">
+          <div id="lessonsList">
+            <div class="loading-spinner" style="margin: 2rem auto;"></div>
+          </div>
+        </div>
+
+        <!-- PANEL DEBERES -->
+        <div class="tab-content" id="panelAssignments">
+          <div class="role-teacher-only" id="teacherAssignmentTools" style="display:none; margin-bottom: 1rem;">
+            <button class="btn btn--primary btn--sm" id="btnAddAssignment">+ Nuevo Deber</button>
+          </div>
+          <div id="assignmentsList"></div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: CLASE -->
+  <div id="lessonModal" class="modal modal-wide">
+    <div class="modal__content" style="max-width: 820px;">
+      <div class="modal__header">
+        <h3 class="modal__title" id="lessonModalTitle">Nueva Clase</h3>
+        <button class="modal__close" id="btnLessonModalClose">&times;</button>
+      </div>
+      <div class="modal__body">
+        <form id="lessonForm" autocomplete="off">
+          <input type="hidden" id="lessonIdField">
+
+          <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; margin-bottom: 1.25rem;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">Título de la Clase *</label>
+              <input class="form-input" type="text" id="lessonTitleField" placeholder="Ej: Introducción a JavaScript" required>
+            </div>
+            <div class="form-group" style="margin:0; min-width: 80px;">
+              <label class="form-label">Día</label>
+              <input class="form-input" type="number" id="lessonDayField" value="1" min="1" style="text-align:center;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">🎬 Enlace de Video (YouTube o MP4, opcional)</label>
+            <input class="form-input" type="url" id="lessonVideoField" placeholder="https://www.youtube.com/watch?v=...">
+          </div>
+
+          <div class="form-group" style="margin-top: 1rem;">
+            <label class="form-label" style="font-size: 0.95rem; color: var(--accent); font-weight: 700;">✏️ Contenido de la Clase</label>
+
+            <div class="editor-tabs" style="margin-top: 0.5rem;">
+              <button type="button" class="editor-tab-btn active" id="btnTabVisual" onclick="setEditorMode('visual')">✏️ Visual</button>
+              <button type="button" class="editor-tab-btn" id="btnTabHtml" onclick="setEditorMode('html')"></> HTML</button>
+            </div>
+
+            <div id="toolbarVisual" class="editor-toolbar">
+              <button type="button" class="toolbar-btn" onclick="execFormatCmd('bold')"><b>B</b></button>
+              <button type="button" class="toolbar-btn" onclick="execFormatCmd('italic')"><i>I</i></button>
+              <button type="button" class="toolbar-btn" onclick="execFormatCmd('underline')"><u>U</u></button>
+              <div class="toolbar-sep"></div>
+              <button type="button" class="toolbar-btn" onclick="execFormatCmd('insertUnorderedList')">• Lista</button>
+              <button type="button" class="toolbar-btn" onclick="execFormatCmd('insertOrderedList')">1. Lista</button>
+              <div class="toolbar-sep"></div>
+              <button type="button" class="toolbar-btn" onclick="insertVisual('h2')">Título H2</button>
+              <button type="button" class="toolbar-btn" onclick="insertVisual('h3')">Subtítulo</button>
+              <button type="button" class="toolbar-btn" onclick="insertVisual('img')">🖼️ Imagen</button>
+              <button type="button" class="toolbar-btn" onclick="insertVisual('video')">🎬 Video</button>
+              <button type="button" class="toolbar-btn" onclick="insertVisual('a')">🔗 Enlace</button>
+            </div>
+
+            <div id="toolbarHtml" class="editor-toolbar" style="display:none;">
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('h2')">H2</button>
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('h3')">H3</button>
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('p')">Párrafo</button>
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('strong')"><b>Bold</b></button>
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('em')"><i>Italic</i></button>
+              <div class="toolbar-sep"></div>
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('img')">🖼️ Imagen</button>
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('video')">🎬 Video</button>
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('a')">🔗 Enlace</button>
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('ul')">• Lista</button>
+              <button type="button" class="toolbar-btn" onclick="insertHtmlTag('li')">Item</button>
+            </div>
+
+            <div id="editorVisual" class="editor-visual" contenteditable="true"></div>
+            <textarea id="lessonContentField" class="editor-html" placeholder="Escribe tu HTML aquí..."></textarea>
+          </div>
+
+          <div id="lessonFormError" style="display:none; background:#fee2e2; color:#b91c1c; padding:0.65rem; border-radius:var(--radius-md); font-size:0.85rem; margin-top:0.75rem; border: 1px solid #fca5a5;"></div>
+          <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
+            <button type="button" class="btn btn--outline" id="btnCancelLessonEdit" style="display:none; flex:1;">Cancelar</button>
+            <button type="submit" class="btn btn--primary" id="btnSaveLesson" style="flex:1;">Crear Clase</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DEBER -->
+  <div id="assignmentModal" class="modal">
+    <div class="modal__content" style="max-width: 600px;">
+      <div class="modal__header">
+        <h3 class="modal__title" id="assignmentModalTitle">Nuevo Deber</h3>
+        <button class="modal__close" id="btnAssignmentModalClose">&times;</button>
+      </div>
+      <div class="modal__body">
+        <form id="assignmentForm">
+          <input type="hidden" id="assignmentIdField">
+          <div class="form-group">
+            <label class="form-label">Título del Deber *</label>
+            <input class="form-input" type="text" id="assignmentTitleField" placeholder="Ej: Tarea 1 - Variables" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción / Instrucciones *</label>
+            <textarea class="form-input" id="assignmentDescField" rows="4" placeholder="Describe detalladamente lo que el estudiante debe hacer..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fecha Límite (opcional)</label>
+            <input class="form-input" type="date" id="assignmentDeadlineField">
+          </div>
+          <div id="assignmentFormError" style="display:none; background:#fee2e2; color:#b91c1c; padding:0.65rem; border-radius:var(--radius-md); font-size:0.85rem; border: 1px solid #fca5a5;"></div>
+          <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
+            <button type="button" class="btn btn--outline" id="btnCancelAssignment" style="flex:1;">Cancelar</button>
+            <button type="submit" class="btn btn--primary" id="btnSaveAssignment" style="flex:1;">Guardar Deber</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PREGUNTA QUIZ -->
+  <div id="questionModal" class="modal">
+    <div class="modal__content" style="max-width: 560px;">
+      <div class="modal__header">
+        <h3 class="modal__title">Agregar Pregunta al Quiz</h3>
+        <button class="modal__close" id="btnQuestionModalClose">&times;</button>
+      </div>
+      <div class="modal__body">
+        <form id="questionForm">
+          <div class="form-group">
+            <label class="form-label">Pregunta *</label>
+            <input class="form-input" type="text" id="questionTextField" placeholder="¿Cuál es la diferencia entre...?" required>
+          </div>
+          <div id="opcionesContainer">
+            <label class="form-label">Opciones de Respuesta</label>
+            <div class="form-group" style="margin-bottom: 0.4rem;" id="opcionWrap0">
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <input type="radio" name="correctaRadio" value="0" checked>
+                <input class="form-input" type="text" id="opcion0" placeholder="Opción A" required>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.4rem;" id="opcionWrap1">
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <input type="radio" name="correctaRadio" value="1">
+                <input class="form-input" type="text" id="opcion1" placeholder="Opción B" required>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.4rem;" id="opcionWrap2">
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <input type="radio" name="correctaRadio" value="2">
+                <input class="form-input" type="text" id="opcion2" placeholder="Opción C">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.4rem;" id="opcionWrap3">
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <input type="radio" name="correctaRadio" value="3">
+                <input class="form-input" type="text" id="opcion3" placeholder="Opción D">
+              </div>
+            </div>
+          </div>
+          <p style="font-size:0.78rem; color: var(--text-light); margin-top: 0.25rem;">📌 Marca el radio junto a la opción correcta.</p>
+          <div id="questionFormError" style="display:none; background:#fee2e2; color:#b91c1c; padding:0.65rem; border-radius:var(--radius-md); font-size:0.85rem; margin-top:0.75rem; border: 1px solid #fca5a5;"></div>
+          <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
+            <button type="button" class="btn btn--outline" id="btnCancelQuestion" style="flex:1;">Cancelar</button>
+            <button type="submit" class="btn btn--primary" style="flex:1;">Agregar Pregunta</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ENTREGA DE DEBER -->
+  <div id="deliveryModal" class="modal">
+    <div class="modal__content" style="max-width: 540px;">
+      <div class="modal__header">
+        <h3 class="modal__title">Entregar Tarea</h3>
+        <button class="modal__close" id="btnDeliveryModalClose">&times;</button>
+      </div>
+      <div class="modal__body">
+        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.85rem; background: var(--primary-lighter); padding: 0.65rem 0.85rem; border-radius: var(--radius-md);">
+          💡 Escribe tu respuesta o pega un enlace (GitHub, Google Drive, etc). También puedes adjuntar un archivo.
+        </p>
+        <form id="deliveryForm">
+          <input type="hidden" id="deliveryAssignmentId">
+          <div class="form-group">
+            <label class="form-label">Respuesta / Enlace</label>
+            <textarea class="form-input" id="deliveryContentField" rows="4" placeholder="Escribe aquí o pega tu enlace..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Adjuntar Archivo (cualquier tipo, opcional)</label>
+            <input class="form-input" type="file" id="deliveryFileField" accept="*/*">
+          </div>
+          <div id="deliveryError" style="display:none; background:#fee2e2; color:#b91c1c; padding:0.65rem; border-radius:var(--radius-md); font-size:0.85rem; border: 1px solid #fca5a5;"></div>
+          <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
+            <button type="button" class="btn btn--outline" id="btnDeliveryCancel" style="flex:1;">Cancelar</button>
+            <button type="submit" class="btn btn--primary" style="flex:1;">Enviar Entrega</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom" style="border-top:none; padding-top:0;">
+        <p>&copy; 2026 CCSUD. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/dist/estudiante.js"></script>
+</body>
+</html>

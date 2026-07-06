@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 140" width="400" height="140">
+  <!-- Background -->
+  <rect width="400" height="140" fill="none"/>
+  
+  <!-- Logo Circle C (Teal) -->
+  <g>
+    <!-- Outer circle -->
+    <circle cx="55" cy="70" r="48" fill="none" stroke="#0D6E6E" stroke-width="18"/>
+    <!-- Inner white space -->
+    <circle cx="55" cy="70" r="30" fill="white"/>
+    <!-- Red dot inside -->
+    <circle cx="55" cy="70" r="15" fill="#FF6B35"/>
+  </g>
+  
+  <!-- Decorative elements (green squares) -->
+  <g transform="translate(95, 30)">
+    <rect x="0" y="0" width="12" height="12" fill="#4A9B8E" transform="rotate(45 6 6)"/>
+    <rect x="20" y="0" width="12" height="12" fill="#7DBFB5" transform="rotate(45 26 6)"/>
+  </g>
+  
+  <!-- Text CCSUD (Teal) -->
+  <text x="150" y="95" font-family="Outfit, sans-serif" font-size="72" font-weight="700" fill="#0D6E6E" letter-spacing="2">CCSUD</text>
+  
+  <!-- Tagline (Orange + Teal) -->
+  <text x="150" y="120" font-family="Inter, sans-serif" font-size="18" fill="#475569">
+    <tspan>Vence tus límites, </tspan>
+    <tspan fill="#FF6B35" font-weight="600">capacítate</tspan>
+  </text>
+</svg>

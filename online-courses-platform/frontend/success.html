@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscripción Exitosa | CCSUD</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__container">
+      <a href="/" class="logo">
+        <img src="/images/logo_ccsud.svg" alt="CCSUD Logo" style="height: 48px; width: auto;">
+      </a>
+      <nav class="nav">
+        <a href="/" class="nav__link">Inicio</a>
+        <a href="/#cursos" class="nav__link">Cursos</a>
+        <a href="/admin" class="nav__link">Administración</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- SUCCESS CARD -->
+  <main class="container">
+    <div class="success-card">
+      <div class="success-card__icon-wrapper">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h1 class="success-card__title">¡Inscripción Exitosa!</h1>
+      <p class="success-card__description">
+        Tu compra se ha procesado correctamente. Ya tienes acceso al curso.
+      </p>
+
+      <div class="success-card__details" id="successDetails">
+        <div class="success-card__row">
+          <span>Curso</span>
+          <span id="successCourseName">---</span>
+        </div>
+        <div class="success-card__row">
+          <span>Monto Pagado</span>
+          <span id="successAmount">$0.00</span>
+        </div>
+        <div class="success-card__row">
+          <span>Fecha de Compra</span>
+          <span id="successDate">---</span>
+        </div>
+        <div class="success-card__row">
+          <span>Estado</span>
+          <span style="color: var(--success);">Completado ✓</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/" class="btn btn--primary">Ir al Inicio</a>
+        <a href="/estudiante" class="btn btn--outline">Ir al Aula Virtual</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom" style="border-top: none; padding-top: 0;">
+        <p>&copy; 2026 CCSUD. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/dist/success.js"></script>
+</body>
+</html>
