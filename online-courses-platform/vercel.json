@@ -2,10 +2,7 @@
   "version": 2,
   "functions": {
     "api/index.js": {
-      "includeFiles": [
-        "frontend/**",
-        "backend/dist/**"
-      ]
+      "includeFiles": "{frontend/**,backend/dist/**}"
     }
   },
   "rewrites": [
