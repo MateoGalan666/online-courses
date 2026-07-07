@@ -4,8 +4,8 @@
   "description": "Professional Online Course Platform using TypeScript, Express, and SQLite",
   "main": "backend/dist/server.js",
   "scripts": {
-    "build:backend": "tsc -p backend/tsconfig.json",
-    "build:frontend": "tsc -p frontend/tsconfig.json",
+    "build:backend": "npx tsc -p backend/tsconfig.json",
+    "build:frontend": "npx tsc -p frontend/tsconfig.json",
     "build": "npm run build:backend && npm run build:frontend",
     "watch:backend": "tsc -p backend/tsconfig.json -w",
     "watch:frontend": "tsc -p frontend/tsconfig.json -w",
