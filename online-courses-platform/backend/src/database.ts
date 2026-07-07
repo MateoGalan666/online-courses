@@ -60,6 +60,7 @@ async function initDatabase(db: Database) {
       instructor_bio TEXT DEFAULT '',
       precio_original REAL DEFAULT 0,
       codigo_html TEXT DEFAULT '',
+      clave_acceso TEXT DEFAULT 'acceso123',
       fecha_creacion TEXT DEFAULT CURRENT_TIMESTAMP
     );
   `);
@@ -146,27 +147,10 @@ async function initDatabase(db: Database) {
       archivo_nombre TEXT DEFAULT '',
       archivo_tipo TEXT DEFAULT '',
       archivo_data TEXT DEFAULT '',
+      contenido_html TEXT DEFAULT '',
       FOREIGN KEY (curso_id) REFERENCES cursos (id) ON DELETE CASCADE
     );
   `);
-
-  const lessonsInfo = await db.all("PRAGMA table_info(lecciones);");
-  const lessonColumns = lessonsInfo.map((col: any) => col.name);
-  if (!lessonColumns.includes('dia')) {
-    await db.run("ALTER TABLE lecciones ADD COLUMN dia INTEGER DEFAULT 1");
-  }
-  if (!lessonColumns.includes('archivo_nombre')) {
-    await db.run("ALTER TABLE lecciones ADD COLUMN archivo_nombre TEXT DEFAULT ''");
-  }
-  if (!lessonColumns.includes('archivo_tipo')) {
-    await db.run("ALTER TABLE lecciones ADD COLUMN archivo_tipo TEXT DEFAULT ''");
-  }
-  if (!lessonColumns.includes('archivo_data')) {
-    await db.run("ALTER TABLE lecciones ADD COLUMN archivo_data TEXT DEFAULT ''");
-  }
-  if (!lessonColumns.includes('contenido_html')) {
-    await db.run("ALTER TABLE lecciones ADD COLUMN contenido_html TEXT DEFAULT ''");
-  }
 
   // Crear tabla de preguntas de lección
   await db.exec(`
@@ -222,18 +206,6 @@ async function initDatabase(db: Database) {
       UNIQUE(deber_id, estudiante_id)
     );
   `);
-
-  const submissionsInfo = await db.all("PRAGMA table_info(entregas_deberes);");
-  const submissionColumns = submissionsInfo.map((col: any) => col.name);
-  if (!submissionColumns.includes('archivo_nombre')) {
-    await db.run("ALTER TABLE entregas_deberes ADD COLUMN archivo_nombre TEXT DEFAULT ''");
-  }
-  if (!submissionColumns.includes('archivo_tipo')) {
-    await db.run("ALTER TABLE entregas_deberes ADD COLUMN archivo_tipo TEXT DEFAULT ''");
-  }
-  if (!submissionColumns.includes('archivo_data')) {
-    await db.run("ALTER TABLE entregas_deberes ADD COLUMN archivo_data TEXT DEFAULT ''");
-  }
 
   // Sembrar credenciales locales por defecto
   const userCount = await db.get<{ count: number }>('SELECT COUNT(*) as count FROM usuarios');

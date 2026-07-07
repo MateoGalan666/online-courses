@@ -12,12 +12,10 @@ const backendApp = require(path.join(projectRoot, 'backend', 'dist', 'server.js'
 const app = express();
 
 // 3) Servir archivos estáticos desde la carpeta frontend
-//    (HTML, CSS, imágenes, JS compilado en dist/)
 const frontendDir = path.join(projectRoot, 'frontend');
 app.use(express.static(frontendDir));
 
-// 4) Pasar todas las demás rutas al backend (que tiene las rutas de la API
-//    y también las rutas de las vistas HTML)
+// 4) Pasar todas las demás rutas al backend
 app.use(backendApp);
 
 // 5) Fallback: si nada coincide, intentar servir el index.html
