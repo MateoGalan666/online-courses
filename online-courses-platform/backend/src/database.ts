@@ -1,6 +1,8 @@
 import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
 import path from 'path';
+import fs from 'fs';
+import os from 'os';
 import crypto from 'crypto';
 
 let db: Database | null = null;
@@ -13,9 +15,14 @@ export async function getDatabase(): Promise<Database> {
   if (db) return db;
 
   // Almacenar la base de datos en la raíz del directorio backend o en /tmp si es Vercel
+  const bundledDbPath = path.join(__dirname, '../courses.db');
   const dbPath = process.env.VERCEL === '1'
-    ? '/tmp/courses.db'
-    : path.join(__dirname, '../courses.db');
+    ? path.join(os.tmpdir(), 'courses.db')
+    : bundledDbPath;
+
+  if (process.env.VERCEL === '1' && !fs.existsSync(dbPath) && fs.existsSync(bundledDbPath)) {
+    fs.copyFileSync(bundledDbPath, dbPath);
+  }
   
   db = await open({
     filename: dbPath,

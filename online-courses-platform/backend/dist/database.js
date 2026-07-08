@@ -7,6 +7,8 @@ exports.getDatabase = getDatabase;
 const sqlite3_1 = __importDefault(require("sqlite3"));
 const sqlite_1 = require("sqlite");
 const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
+const os_1 = __importDefault(require("os"));
 const crypto_1 = __importDefault(require("crypto"));
 let db = null;
 /**
@@ -17,9 +19,13 @@ async function getDatabase() {
     if (db)
         return db;
     // Almacenar la base de datos en la raíz del directorio backend o en /tmp si es Vercel
+    const bundledDbPath = path_1.default.join(__dirname, '../courses.db');
     const dbPath = process.env.VERCEL === '1'
-        ? '/tmp/courses.db'
-        : path_1.default.join(__dirname, '../courses.db');
+        ? path_1.default.join(os_1.default.tmpdir(), 'courses.db')
+        : bundledDbPath;
+    if (process.env.VERCEL === '1' && !fs_1.default.existsSync(dbPath) && fs_1.default.existsSync(bundledDbPath)) {
+        fs_1.default.copyFileSync(bundledDbPath, dbPath);
+    }
     db = await (0, sqlite_1.open)({
         filename: dbPath,
         driver: sqlite3_1.default.Database
@@ -58,6 +64,7 @@ async function initDatabase(db) {
       instructor_bio TEXT DEFAULT '',
       precio_original REAL DEFAULT 0,
       codigo_html TEXT DEFAULT '',
+      clave_acceso TEXT DEFAULT 'acceso123',
       fecha_creacion TEXT DEFAULT CURRENT_TIMESTAMP
     );
   `);
@@ -138,26 +145,10 @@ async function initDatabase(db) {
       archivo_nombre TEXT DEFAULT '',
       archivo_tipo TEXT DEFAULT '',
       archivo_data TEXT DEFAULT '',
+      contenido_html TEXT DEFAULT '',
       FOREIGN KEY (curso_id) REFERENCES cursos (id) ON DELETE CASCADE
     );
   `);
-    const lessonsInfo = await db.all("PRAGMA table_info(lecciones);");
-    const lessonColumns = lessonsInfo.map((col) => col.name);
-    if (!lessonColumns.includes('dia')) {
-        await db.run("ALTER TABLE lecciones ADD COLUMN dia INTEGER DEFAULT 1");
-    }
-    if (!lessonColumns.includes('archivo_nombre')) {
-        await db.run("ALTER TABLE lecciones ADD COLUMN archivo_nombre TEXT DEFAULT ''");
-    }
-    if (!lessonColumns.includes('archivo_tipo')) {
-        await db.run("ALTER TABLE lecciones ADD COLUMN archivo_tipo TEXT DEFAULT ''");
-    }
-    if (!lessonColumns.includes('archivo_data')) {
-        await db.run("ALTER TABLE lecciones ADD COLUMN archivo_data TEXT DEFAULT ''");
-    }
-    if (!lessonColumns.includes('contenido_html')) {
-        await db.run("ALTER TABLE lecciones ADD COLUMN contenido_html TEXT DEFAULT ''");
-    }
     // Crear tabla de preguntas de lección
     await db.exec(`
     CREATE TABLE IF NOT EXISTS preguntas_leccion (
@@ -209,17 +200,6 @@ async function initDatabase(db) {
       UNIQUE(deber_id, estudiante_id)
     );
   `);
-    const submissionsInfo = await db.all("PRAGMA table_info(entregas_deberes);");
-    const submissionColumns = submissionsInfo.map((col) => col.name);
-    if (!submissionColumns.includes('archivo_nombre')) {
-        await db.run("ALTER TABLE entregas_deberes ADD COLUMN archivo_nombre TEXT DEFAULT ''");
-    }
-    if (!submissionColumns.includes('archivo_tipo')) {
-        await db.run("ALTER TABLE entregas_deberes ADD COLUMN archivo_tipo TEXT DEFAULT ''");
-    }
-    if (!submissionColumns.includes('archivo_data')) {
-        await db.run("ALTER TABLE entregas_deberes ADD COLUMN archivo_data TEXT DEFAULT ''");
-    }
     // Sembrar credenciales locales por defecto
     const userCount = await db.get('SELECT COUNT(*) as count FROM usuarios');
     if (userCount && userCount.count === 0) {

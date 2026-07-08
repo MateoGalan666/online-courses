@@ -3,7 +3,7 @@
   "outputDirectory": "frontend",
   "functions": {
     "api/index.js": {
-      "includeFiles": "{frontend/**,backend/dist/**}"
+      "includeFiles": "{frontend/**,backend/dist/**,backend/courses.db}"
     }
   },
   "rewrites": [
