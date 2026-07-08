@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "outputDirectory": "frontend",
+  "buildCommand": "npm run build",
   "functions": {
     "api/index.js": {
       "includeFiles": "{frontend/**,backend/dist/**,backend/courses.db}"
